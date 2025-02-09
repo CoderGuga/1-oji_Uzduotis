@@ -44,7 +44,7 @@ int main()
         string ndCon = TypeString("sukurti nauja namu darbo pazymi? Iveskite 'y', kad sukurtumete ");
         while (ndCon =="y")
         {
-            student.nd.push_back(TypeInt("Namu darbo pazymys: ", 10));
+            student.ndVector.push_back(TypeInt("Namu darbo pazymys: ", 10));
             ndCon = TypeString("sukurti nauja namu darbo pazymi? Iveskite 'y', kad sukurtumete ");
         }
         students.push_back(student);  
@@ -75,15 +75,15 @@ int main()
     // Print the student data
     for (const auto& student : students) {
         double average = 0;
-        if (!student.nd.empty()) {
+        if (!student.ndVector.empty()) {
             if (type == "v") {
                 double sum = 0;
                 for (int grade : student.nd) {
                     sum += grade;
                 }
-                average = sum / student.nd.size();
+                average = sum / student.ndVector.size();
             } else {
-                vector<int> sorted_nd = student.nd;
+                vector<int> sorted_nd = student.ndVector;
                 std::sort(sorted_nd.begin(), sorted_nd.end());
                 if (sorted_nd.size() % 2 == 0) {
                     average = (sorted_nd[sorted_nd.size() / 2 - 1] + sorted_nd[sorted_nd.size() / 2]) / 2.0;

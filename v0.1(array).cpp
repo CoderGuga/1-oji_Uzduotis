@@ -1,5 +1,9 @@
 #include "helper.h"
 
+using namespace std;
+
+const int MAX_STUDENTS = 10;
+
 int TypeInt(const string& text, int max)
 {
     cout << text;
@@ -9,7 +13,7 @@ int TypeInt(const string& text, int max)
         cin >> input;
         auto result = string_to<int>(input);
         if (result) {
-            if (max == 0 || result <= max)
+            if (max == 0 || (result <= max && result > 0))
                 return *result;
             else
                 cout<< "Per didelis skaicius"<<endl;
@@ -19,7 +23,7 @@ int TypeInt(const string& text, int max)
     }
 }
 
-std::string TypeString(const string& prompt)
+string TypeString(const string& prompt)
 {
     string output;
     cout << prompt;
@@ -31,27 +35,50 @@ std::string TypeString(const string& prompt)
     return output;
 }
 
+string GenName()
+{
+    const std::string names[] = {"Jonas", "Petras", "Antanas", "Kazys", "Vytautas", "Tomas", "Marius", "Andrius", "Darius", "Saulius"};
+    int index = rand() % (sizeof(names) / sizeof(names[0]));
+    return names[index];
+}
+
+string GenSurname()
+{
+    const std::string surnames[] = {"Jonaitis", "Petraitis", "Antanaitis", "Kazlauskas", "Takelis", "Tomaitis", "Andraitis"};
+    int index = rand() % (sizeof(surnames) / sizeof(surnames[0]));
+    return surnames[index];
+}
+
+int RandInt(int min, int max)
+{
+    return rand() % max + min;
+}
+
 int main()
 {
     srand(time(0)); // Initialize random seed
 
     int stCon = TypeInt("1 - ranka irasyti viska, 2 - generuoti pazymius, 3 - generuoti ir pazymius ir studentu vardus, pavardes, 4 - baigti darba: ", 4);
-    vector<Stud> students;
-    while (stCon == 1 || stCon == 2 || stCon == 3)
+    Stud students[MAX_STUDENTS];
+    int student_count = 0;
+
+    while ((stCon == 1 || stCon == 2 || stCon == 3) && student_count < MAX_STUDENTS)
     {
         Stud student;
         student.vardas = (stCon == 3) ? GenName() : TypeString("Studento vardas: ");
         student.pavarde = (stCon == 3) ? GenSurname() : TypeString("Studento pavarde: ");
         student.egz = (stCon == 1) ? TypeInt("Egzamino pazymys: ", 10) : RandInt(1, 10);
+        student.nd_count = 0;
+
         string ndCon = TypeString("sukurti nauja namu darbo pazymi? Iveskite 'y', kad sukurtumete ");
-        while (ndCon == "y")
+        while (ndCon == "y" && student.nd_count < MAX_GRADES)
         {
-            student.ndVector.push_back((stCon == 1) ? TypeInt("Namu darbo pazymys: ", 10) : RandInt(1, 10));
+            student.nd[student.nd_count++] = (stCon == 1) ? TypeInt("Namu darbo pazymys: ", 10) : RandInt(1, 10);
             ndCon = TypeString("sukurti nauja namu darbo pazymi? Iveskite 'y', kad sukurtumete ");
         }
-        students.push_back(student);  
+        students[student_count++] = student;
 
-        stCon = TypeInt("1 - ranka irasyti viska, 2 - generuoti pazymius, 3 - generuoti ir pazymius ir studentu vardus, pavardes, 4 - baigti darba: ", 4);
+        stCon = TypeInt("1 - ranka irasyti, 2 - generuoti pazymius, 3 - generuoti ir pazymius ir studentu vardus, pavardes, 4 - baigti darba: ");
     }
 
     string type;
@@ -68,29 +95,31 @@ int main()
         galutinisTipas = "Galutinis (Vid.)";
     else
         galutinisTipas = "Galutinis (Med.)";
-        
+
     cout << std::left << std::setw(15) << "Vardas" 
          << std::setw(15) << "Pavarde" 
          << std::setw(10) << galutinisTipas << endl;
     cout << "-------------------------------------------------------------" << endl;
 
     // Print the student data
-    for (const auto& student : students) {
+    for (int i = 0; i < student_count; ++i) {
+        const Stud& student = students[i];
         double average = 0;
-        if (!student.ndVector.empty()) {
+        if (student.nd_count > 0) {
             if (type == "v") {
                 double sum = 0;
-                for (int grade : student.ndVector) {
-                    sum += grade;
+                for (int j = 0; j < student.nd_count; ++j) {
+                    sum += student.nd[j];
                 }
-                average = sum / student.ndVector.size();
+                average = sum / student.nd_count;
             } else {
-                vector<int> sorted_nd = student.ndVector;
-                std::sort(sorted_nd.begin(), sorted_nd.end());
-                if (sorted_nd.size() % 2 == 0) {
-                    average = (sorted_nd[sorted_nd.size() / 2 - 1] + sorted_nd[sorted_nd.size() / 2]) / 2.0;
+                int sorted_nd[MAX_GRADES];
+                std::copy(student.nd, student.nd + student.nd_count, sorted_nd);
+                std::sort(sorted_nd, sorted_nd + student.nd_count);
+                if (student.nd_count % 2 == 0) {
+                    average = (sorted_nd[student.nd_count / 2 - 1] + sorted_nd[student.nd_count / 2]) / 2.0;
                 } else {
-                    average = sorted_nd[sorted_nd.size() / 2];
+                    average = sorted_nd[student.nd_count / 2];
                 }
             }
         }
