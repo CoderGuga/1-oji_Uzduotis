@@ -78,7 +78,7 @@ int main()
         if (!student.ndVector.empty()) {
             if (type == "v") {
                 double sum = 0;
-                for (int grade : student.nd) {
+                for (int grade : student.ndVector) {
                     sum += grade;
                 }
                 average = sum / student.ndVector.size();

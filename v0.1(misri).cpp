@@ -43,11 +43,10 @@ int main()
         student.vardas = (stCon == 3) ? GenName() : TypeString("Studento vardas: ");
         student.pavarde = (stCon == 3) ? GenSurname() : TypeString("Studento pavarde: ");
         student.egz = (stCon == 1) ? TypeInt("Egzamino pazymys: ", 10) : RandInt(1, 10);
-        string ndCon = TypeString("sukurti nauja namu darbo pazymi? Iveskite 'y', kad sukurtumete ");
-        while (ndCon == "y")
-        {
-            student.ndVector.push_back((stCon == 1) ? TypeInt("Namu darbo pazymys: ", 10) : RandInt(1, 10));
-            ndCon = TypeString("sukurti nauja namu darbo pazymi? Iveskite 'y', kad sukurtumete ");
+        student.nd_count = TypeInt("Kiek namu darbu pazymiu norite ivesti? ");
+        student.nd = new int[student.nd_count];
+        for (int i = 0; i < student.nd_count; ++i) {
+            student.nd[i] = (stCon == 1) ? TypeInt("Namu darbo pazymys: ", 10) : RandInt(1, 10);
         }
         students.push_back(student);  
 
