@@ -16,14 +16,14 @@ using std::endl;
 using std::string;
 using std::vector;
 
-const int MAX_GRADES = 10;
+int MAX_GRADES = 10;
 
 struct Stud {
     std::string pavarde = "Pavardenis";
     std::string vardas = "Vardenis";
     int egz = 10;
     vector <int> ndVector;
-    int nd[MAX_GRADES];
+    int* nd; // dynamically allocated array for grades
     int nd_count = 0;
 };
 
