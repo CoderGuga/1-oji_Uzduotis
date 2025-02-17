@@ -144,6 +144,49 @@ void WriteToFile(const vector<Stud>& students, const string& filename)
     file.close();
 }
 
+double Median(vector<int> numbers)
+{
+    vector<int> sorted = numbers;
+    sort(sorted.begin(), sorted.end());
+    double median;
+    if (sorted.size() % 2 == 0)
+        median = (sorted[sorted.size() / 2 - 1] + sorted[sorted.size() / 2]) / 2.0;
+    else
+        median = sorted[sorted.size() / 2];
+
+    return median;
+}
+
+double Average(vector<int> numbers)
+{
+    double sum = 0, average;
+    for (int grade : numbers) {
+    sum += grade; 
+    }
+    average = sum / numbers.size();
+}
+
+void SortOutput(string sortType, vector<Stud> students)
+{
+    if (sortType == "vardas") {
+        std::sort(students.begin(), students.end(), [](const Stud& a, const Stud& b) {
+            return a.vardas < b.vardas;
+        });
+    } else if (sortType == "pavarde") {
+        std::sort(students.begin(), students.end(), [](const Stud& a, const Stud& b) {
+            return a.pavarde < b.pavarde;
+        });
+    } else if (sortType == "vidurkis") {
+        std::sort(students.begin(), students.end(), [](const Stud& a, const Stud& b) {
+            return a.galutinisVid < b.galutinisVid;
+        });
+    } else if (sortType == "mediana") {
+        std::sort(students.begin(), students.end(), [](const Stud& a, const Stud& b) {
+            return a.galutinisMed < b.galutinisMed;
+        });
+    }
+}
+
 
 
 #endif
