@@ -3,8 +3,9 @@
 int main()
 {
     srand(time(0)); // Initialize random seed
+    string menu = "1 - ranka irasyti viska, 2 - generuoti pazymius, 3 - generuoti ir pazymius ir studentu vardus, pavardes, 4 - irasyti duomenis is failo 5 - baigti darba: ";
 
-    int stCon = TypeInt("1 - ranka irasyti viska, 2 - generuoti pazymius, 3 - generuoti ir pazymius ir studentu vardus, pavardes, 4 - irasyti duomenis is failo 5 - baigti darba: ", 5);
+    int stCon = TypeInt(menu, 5);
     vector<Stud> students;
 
     while (stCon != 5)
@@ -34,7 +35,7 @@ int main()
             students.push_back(student);  
         }
         
-        stCon = TypeInt("1 - ranka irasyti viska, 2 - generuoti pazymius, 3 - generuoti ir pazymius ir studentu vardus, pavardes, 4 - irasyti duomenis is failo 5 - baigti darba: ", 5);
+        stCon = TypeInt(menu, 5);
     }
 
     string sortType;
@@ -91,22 +92,36 @@ int main()
         });
     }
 
-    string galutinisTipasVid = "Galutinis (Vid.)";
-    string galutinisTipasMed = "Galutinis (Med.)";
-        
-    cout << std::left << std::setw(15) << "Vardas" 
-         << std::setw(15) << "Pavarde" 
-         << std::setw(15) << galutinisTipasVid 
-         << std::setw(15) << galutinisTipasMed << endl;
-    cout << "-------------------------------------------------------------" << endl;
-
-    // Print the student data
-    for (const auto& student : students) {
-        cout << std::left << std::setw(15) << student.vardas 
-             << std::setw(15) << student.pavarde 
-             << std::setw(15) << std::fixed << std::setprecision(2) << student.galutinisVid 
-             << std::setw(15) << std::fixed << std::setprecision(2) << student.galutinisMed << endl;
+    string outputType;
+    cout << "Isvesti i terminala 't', ar faila 'f': ";
+    cin >> outputType;
+    while (outputType != "t" && outputType != "f")
+    {
+        cout << "Iveskite 't' arba 'f': ";
+        cin >> outputType;
     }
+    
+    if (outputType == "t")
+    {
+        string galutinisTipasVid = "Galutinis (Vid.)";
+        string galutinisTipasMed = "Galutinis (Med.)";
+            
+        cout << std::left << std::setw(15) << "Vardas" 
+            << std::setw(15) << "Pavarde" 
+            << std::setw(15) << galutinisTipasVid 
+            << std::setw(15) << galutinisTipasMed << endl;
+        cout << "-------------------------------------------------------------" << endl;
+
+        // Print the student data
+        for (const auto& student : students) {
+            cout << std::left << std::setw(15) << student.vardas 
+                << std::setw(15) << student.pavarde 
+                << std::setw(15) << std::fixed << std::setprecision(2) << student.galutinisVid 
+                << std::setw(15) << std::fixed << std::setprecision(2) << student.galutinisMed << endl;
+        }
+    }
+    else
+        WriteToFile(students, "output.txt");
 
     return 0;
 }
