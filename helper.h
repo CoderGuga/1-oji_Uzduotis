@@ -9,12 +9,19 @@
 #include <optional>
 #include <limits>
 #include <algorithm>
+#include <fstream>
+#include <chrono>
 
 using std::cout;
 using std::cin;
 using std::endl;
 using std::string;
 using std::vector;
+using std::ifstream;
+using std:: ofstream;
+using std::cerr;
+using std::getline;
+using namespace std::chrono;
 
 int MAX_GRADES = 10;
 
@@ -25,41 +32,10 @@ struct Stud {
     vector <int> ndVector;
     int* nd; // dynamically allocated array for grades
     int nd_count = 0;
+    float galutinisVid;
+    float galutinisMed;
 };
 
-template <typename T>
-std::optional<T> string_to(const std::string & s)
-{
-    T value;
-    std::istringstream ss(s);
-    if ((ss >> value) && (ss >> std::ws).eof()) { // attempt the conversion
-        return value; // success
-    } else {
-        return std::nullopt; // failure
-    }
-}
 
-int TypeInt(const std::string& text, int max = 0);
-std::string TypeString(const std::string& prompt);
-
-
-string GenName()
-{
-    const std::string names[] = {"Jonas", "Petras", "Antanas", "Kazys", "Vytautas", "Tomas", "Marius", "Andrius", "Darius", "Saulius"};
-    int index = rand() % (sizeof(names) / sizeof(names[0]));
-    return names[index];
-}
-
-string GenSurname()
-{
-    const std::string surnames[] = {"Jonaitis", "Petraitis", "Antanaitis", "Kazlauskas", "Takelis", "Tomaitis", "Andraitis"};
-    int index = rand() % (sizeof(surnames) / sizeof(surnames[0]));
-    return surnames[index];
-}
-
-int RandInt(int min, int max)
-{
-    return rand() % (max - min + 1) + min;
-}
 
 #endif // HELPER_H
