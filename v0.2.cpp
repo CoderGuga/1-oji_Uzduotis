@@ -9,8 +9,7 @@ int main()
 
     while (stCon != 5)
     {
-
-        if (stCon == 4){
+        if (stCon == 4) {
             string filename;
             cout << "Iveskite failo pavadinima: ";
             cin >> filename;
@@ -29,63 +28,84 @@ int main()
             student.ndVector.resize(nd_count);
             for (int i = 0; i < nd_count; ++i) {
                 int nd = (stCon == 1) ? TypeInt("Namu darbo pazymys: ", 10) : RandInt(1, 10);
-                student.ndVector.push_back(nd);
+                student.ndVector[i] = nd;
                 cout << "namu darbo: " << nd << endl;
             }
             students.push_back(student);  
-            student.ndVector.clear();
         }
         
         stCon = TypeInt("1 - ranka irasyti viska, 2 - generuoti pazymius, 3 - generuoti ir pazymius ir studentu vardus, pavardes, 4 - irasyti duomenis is failo 5 - baigti darba: ", 5);
-        
     }
 
-    string type;
-    cout << "Pazymio isvedimo tipas? (Vidurkis - v / Mediama - m): ";
-    cin >> type;
-    while (type != "v" && type != "m")
+    string sortType;
+    cout << "Rikiavimo tipas? (Vardas - vardas / Pavarde - pavarde / Galutinis pagal vidurki - vidurkis / Galutinis pagal mediana - mediana): ";
+    cin >> sortType;
+    while (sortType != "vardas" && sortType != "pavarde" && sortType != "vidurkis" && sortType != "mediana")
     {
-        cout << "Iveskite 'v' arba 'm': ";
-        cin >> type;
+        cout << "Iveskite 'vardas', 'pavarde', 'vidurkis' arba 'mediana': ";
+        cin >> sortType;
     }
 
-    string galutinisTipas;
-    if (type == "v")
-        galutinisTipas = "Galutinis (Vid.)";
-    else
-        galutinisTipas = "Galutinis (Med.)";
+    // Calculate final grades
+    for (auto& student : students) {
+        double average = 0;
+        double median = 0;
+        if (!student.ndVector.empty()) {
+            // Calculate average
+            double sum = 0;
+            for (int grade : student.ndVector) {
+                sum += grade; 
+            }
+            average = sum / student.ndVector.size();
+
+            // Calculate median
+            std::vector<int> sorted_nd = student.ndVector;
+            std::sort(sorted_nd.begin(), sorted_nd.end());
+            if (sorted_nd.size() % 2 == 0) {
+                median = (sorted_nd[sorted_nd.size() / 2 - 1] + sorted_nd[sorted_nd.size() / 2]) / 2.0;
+            } else {
+                median = sorted_nd[sorted_nd.size() / 2];
+            }
+        }
+
+        student.galutinisVid = student.egz * 0.6 + average * 0.4;
+        student.galutinisMed = student.egz * 0.6 + median * 0.4;
+    }
+
+    // Sort students based on the user's choice
+    if (sortType == "vardas") {
+        std::sort(students.begin(), students.end(), [](const Stud& a, const Stud& b) {
+            return a.vardas < b.vardas;
+        });
+    } else if (sortType == "pavarde") {
+        std::sort(students.begin(), students.end(), [](const Stud& a, const Stud& b) {
+            return a.pavarde < b.pavarde;
+        });
+    } else if (sortType == "vidurkis") {
+        std::sort(students.begin(), students.end(), [](const Stud& a, const Stud& b) {
+            return a.galutinisVid < b.galutinisVid;
+        });
+    } else if (sortType == "mediana") {
+        std::sort(students.begin(), students.end(), [](const Stud& a, const Stud& b) {
+            return a.galutinisMed < b.galutinisMed;
+        });
+    }
+
+    string galutinisTipasVid = "Galutinis (Vid.)";
+    string galutinisTipasMed = "Galutinis (Med.)";
         
     cout << std::left << std::setw(15) << "Vardas" 
          << std::setw(15) << "Pavarde" 
-         << std::setw(10) << galutinisTipas << endl;
+         << std::setw(15) << galutinisTipasVid 
+         << std::setw(15) << galutinisTipasMed << endl;
     cout << "-------------------------------------------------------------" << endl;
 
     // Print the student data
     for (const auto& student : students) {
-        double average = 0;
-        if (!student.ndVector.empty()) {
-            if (type == "v") {
-                double sum = 0;
-                for (int grade : student.ndVector) {
-                    sum += grade; 
-                }
-                average = sum / student.ndVector.size();
-            } else {
-                std::vector<int> sorted_nd = student.ndVector;
-                std::sort(sorted_nd.begin(), sorted_nd.end());
-                if (sorted_nd.size() % 2 == 0) {
-                    average = (sorted_nd[sorted_nd.size() / 2 - 1] + sorted_nd[sorted_nd.size() / 2]) / 2.0;
-                } else {
-                    average = sorted_nd[sorted_nd.size() / 2];
-                }
-            }
-        }
-
-        double galutinis = student.egz * 0.6 + average * 0.4;
-
         cout << std::left << std::setw(15) << student.vardas 
              << std::setw(15) << student.pavarde 
-             << std::setw(10) << std::fixed << std::setprecision(2) << galutinis << endl;
+             << std::setw(15) << std::fixed << std::setprecision(2) << student.galutinisVid 
+             << std::setw(15) << std::fixed << std::setprecision(2) << student.galutinisMed << endl;
     }
 
     return 0;
