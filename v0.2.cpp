@@ -14,7 +14,12 @@ int main()
             string filename;
             cout << "Iveskite failo pavadinima: ";
             cin >> filename;
+
+            auto start = high_resolution_clock::now();
             ReadFromFile(students, filename);
+            auto end = high_resolution_clock::now();
+            auto duration = duration_cast<milliseconds>(end - start);
+            cout << "ReadFromFile function took " << duration.count() << " milliseconds." << endl;
         }
         
         if (stCon == 1 || stCon == 2 || stCon == 3)
@@ -100,7 +105,7 @@ int main()
         cout << "Iveskite 't' arba 'f': ";
         cin >> outputType;
     }
-    
+    auto start = high_resolution_clock::now();
     if (outputType == "t")
     {
         string galutinisTipasVid = "Galutinis (Vid.)";
@@ -122,6 +127,10 @@ int main()
     }
     else
         WriteToFile(students, "output.txt");
+
+    auto end = high_resolution_clock::now();
+    auto duration = duration_cast<milliseconds>(end - start);
+    cout << "Output took " << duration.count() << " milliseconds." << endl;
 
     return 0;
 }
