@@ -159,14 +159,15 @@ double Median(vector<int> numbers)
 
 double Average(vector<int> numbers)
 {
-    double sum = 0, average;
+    double sum = 0;
     for (int grade : numbers) {
-    sum += grade; 
-    }
-    average = sum / numbers.size();
+        sum += grade;}
+    double average = sum / numbers.size();
+
+    return average;
 }
 
-void SortOutput(string sortType, vector<Stud> students)
+vector<Stud> SortOutput(string sortType, vector<Stud> students)
 {
     if (sortType == "vardas") {
         std::sort(students.begin(), students.end(), [](const Stud& a, const Stud& b) {
@@ -185,6 +186,28 @@ void SortOutput(string sortType, vector<Stud> students)
             return a.galutinisMed < b.galutinisMed;
         });
     }
+
+    return students;
+}
+
+void PrintToTerminal(vector<Stud> students)
+{
+    string galutinisTipasVid = "Galutinis (Vid.)";
+        string galutinisTipasMed = "Galutinis (Med.)";
+            
+        cout << std::left << std::setw(15) << "Vardas" 
+            << std::setw(15) << "Pavarde" 
+            << std::setw(15) << galutinisTipasVid 
+            << std::setw(15) << galutinisTipasMed << endl;
+        cout << "-------------------------------------------------------------" << endl;
+
+        // Print the student data
+        for (const auto& student : students) {
+            cout << std::left << std::setw(15) << student.vardas 
+                << std::setw(15) << student.pavarde 
+                << std::setw(15) << std::fixed << std::setprecision(2) << student.galutinisVid 
+                << std::setw(15) << std::fixed << std::setprecision(2) << student.galutinisMed << endl;
+        }
 }
 
 

@@ -67,7 +67,7 @@ int main()
     }
 
     // Sort students based on the user's choice
-    SortOutput(sortType, students);
+    students = SortOutput(sortType, students);
 
     string outputType;
     cout << "Isvesti i terminala 't', ar faila 'f': ";
@@ -80,22 +80,7 @@ int main()
     auto start = high_resolution_clock::now();
     if (outputType == "t")
     {
-        string galutinisTipasVid = "Galutinis (Vid.)";
-        string galutinisTipasMed = "Galutinis (Med.)";
-            
-        cout << std::left << std::setw(15) << "Vardas" 
-            << std::setw(15) << "Pavarde" 
-            << std::setw(15) << galutinisTipasVid 
-            << std::setw(15) << galutinisTipasMed << endl;
-        cout << "-------------------------------------------------------------" << endl;
-
-        // Print the student data
-        for (const auto& student : students) {
-            cout << std::left << std::setw(15) << student.vardas 
-                << std::setw(15) << student.pavarde 
-                << std::setw(15) << std::fixed << std::setprecision(2) << student.galutinisVid 
-                << std::setw(15) << std::fixed << std::setprecision(2) << student.galutinisMed << endl;
-        }
+        PrintToTerminal(students);
     }
     else
         WriteToFile(students, "output.txt");
