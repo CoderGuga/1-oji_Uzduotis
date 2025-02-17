@@ -24,19 +24,7 @@ int main()
         
         if (stCon == 1 || stCon == 2 || stCon == 3)
         {
-            Stud student;
-            student.vardas = (stCon == 3) ? GenName() : TypeString("Studento vardas: ");
-            student.pavarde = (stCon == 3) ? GenSurname() : TypeString("Studento pavarde: ");
-            student.egz = (stCon == 1) ? TypeInt("Egzamino pazymys: ", 10) : RandInt(1, 10);
-            cout << "egzaminas: " << student.egz << endl;
-            int nd_count = TypeInt("Kiek namu darbu pazymiu norite ivesti? ");
-            student.ndVector.clear();
-            student.ndVector.resize(nd_count);
-            for (int i = 0; i < nd_count; ++i) {
-                int nd = (stCon == 1) ? TypeInt("Namu darbo pazymys: ", 10) : RandInt(1, 10);
-                student.ndVector[i] = nd;
-                cout << "namu darbo: " << nd << endl;
-            }
+            Stud student = CreateStudent(stCon);
             students.push_back(student);  
         }
         
