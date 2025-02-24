@@ -15,9 +15,44 @@ std::optional<T> string_to(const std::string & s)
     }
 }
 
+int RandInt(int min, int max)
+{
+    // Use the current time as a seed for the random number generator
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::mt19937 generator(seed); // Mersenne Twister engine
+    std::uniform_int_distribution<int> distribution(min, max);
+    return distribution(generator);
+}
+
+int CheckInt(int max = 0)
+{
+    while (true)
+    {
+        cout << "Iveskite sveikaji skaiciu: ";
+        string input;
+        cin >> input;
+        try {
+            auto result = string_to<int>(input);
+            if (result) {
+                if (max == 0 || result <= max)
+                    return *result;
+                else
+                    cout<< "Per didelis skaicius"<<endl;
+            } else {
+                throw std::invalid_argument("Neteisinga ivestis");
+            }
+        } catch (const std::invalid_argument&) {
+            cout << "Ivestas ne sveikas skaicius. Bandykite dar karta." << endl;
+        } catch (const std::exception& e) {
+            cerr << "Klaida: " << e.what() << endl;
+        }
+    }
+}
+
+
 int TypeInt(const string& text, int max = 0)
 {
-    cout << text;
+    cout << text<< endl;
     string input;
     while (true)
     {
@@ -60,11 +95,6 @@ string GenSurname()
     return surnames[index];
 }
 
-int RandInt(int min, int max)
-{
-    return rand() % (max - min + 1) + min;
-}
-
 int CountWordsInLine(const std::string& line)
 {
     std::istringstream stream(line);
@@ -80,7 +110,7 @@ void ReadFromFile(vector<Stud>& students, const string& filename)
 {
     ifstream file(filename);
     if (!file.is_open()) {
-        cerr << "Failed to open file: " << filename << endl;
+        cerr << "Nepavyko atidaryti failo (ar teisingai ivedete pavadinima?): " << filename << endl;
         return;
     }
 
@@ -119,7 +149,7 @@ void WriteToFile(const vector<Stud>& students, const string& filename)
 {
     ofstream file(filename);
     if (!file.is_open()) {
-        cerr << "Failed to open file: " << filename << endl;
+        cerr << "Nepavyko atidaryti failo (ar teisingai ivedete pavadinima?): " << filename << endl;
         return;
     }
 
@@ -217,16 +247,20 @@ Stud CreateStudent(int stCon)
     student.pavarde = (stCon == 3) ? GenSurname() : TypeString("Studento pavarde: ");
     student.egz = (stCon == 1) ? TypeInt("Egzamino pazymys: ", 10) : RandInt(1, 10);
     cout << "egzaminas: " << student.egz << endl;
-    int nd_count = TypeInt("Kiek namu darbu pazymiu norite ivesti? ");
+    string con = TypeString("Prideti namu darbp pazymi? y/n  ");
     student.ndVector.clear();
-    student.ndVector.resize(nd_count);
-    for (int i = 0; i < nd_count; ++i) {
-        int nd = (stCon == 1) ? TypeInt("Namu darbo pazymys: ", 10) : RandInt(1, 10);
-        student.ndVector[i] = nd;
-        cout << "namu darbo: " << nd << endl;
+    while (con == "y")
+    {
+        int nd = RandInt(1, 10);
+        nd = (stCon == 1) ? TypeInt("Namu darbu pazymys: ", 10) : RandInt(1, 10);
+        if (stCon != 1) cout<<"Pazymis: "<< nd<<endl;
+        student.ndVector.push_back(nd);
+        con = TypeString("Prideti namu darbp pazymi? y/n  ");
     }
     return student;
 }
+
+
 
 
 

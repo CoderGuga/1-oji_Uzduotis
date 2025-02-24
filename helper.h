@@ -11,6 +11,8 @@
 #include <algorithm>
 #include <fstream>
 #include <chrono>
+#include <exception>
+#include <random>
 
 using std::cout;
 using std::cin;
@@ -22,6 +24,8 @@ using std:: ofstream;
 using std::cerr;
 using std::getline;
 using namespace std::chrono;
+using std::sort;
+using std::optional;
 
 int MAX_GRADES = 10;
 
