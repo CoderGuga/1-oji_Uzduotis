@@ -52,7 +52,7 @@ int CheckInt(int max = 0)
 
 int TypeInt(const string& text, int max = 0)
 {
-    cout << text<< endl;
+    cout << text;
     string input;
     while (true)
     {
