@@ -1,9 +1,8 @@
 # 1-oji_Uzduotis
 
-v0.1(vector) programa leidžia sukurti norimą kiekį studentų, įrašant kiekvino studento vardą, pavardę, egzamino pažymį ir vartotojo pasirinktą kiekį namų darbų pažymių.
-Galiausiai išvedaamas kiekvieno studento galutinis pažymis, vartotojo pasirinkta formule (0.6 * egzamino pažymys + 0.4 * namų darbų vidurkis, arba mediana).
-Visiems masyvams saugoti naudojamas vektorinis tipas.
+Faile helper.h yra įtraukiami naudojami libraries, sutrumpinimai ir struktūros.
+Faile functions.h yra aprašomos visos naudojamos funkcijos.
 
-v0.1(misri) ir v0.1(array) atlieka tas pačias funkcijas, kaip ir v0.1(vector), tačiau taip pat leidžia ir atsistiktinai sugeneruoti pažymius, bei vardus ir pavardes iš keletos lietuviškų vardų ir pavardžių sąrašo.
+v0.2.cpp programa yra sukurta v0.1(vector).cpp programos pagrindu.
 
-v0.1(array) saugo masyvus dinamių ir statinių masyvų tipuose, o v0.1(misri) naudoja tiek vector, tiek dinamius, tiek statinius masyvus.
+Programa atlieka pas pačias funkcijas kaip ir v0.1(vector).cpp, tačiau taip pat leidžia skaityti duomenis iš failo, įrašyti duomenis į output.txt failą, bei parodo laiką, kurį užtruko.
