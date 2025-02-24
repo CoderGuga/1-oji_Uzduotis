@@ -3,10 +3,9 @@
 int main()
 {
     try {
-        srand(time(0)); // Initialize random seed
         string menu = "1 - ranka irasyti viska, 2 - generuoti pazymius, 3 - generuoti ir pazymius ir studentu vardus, pavardes, 4 - irasyti duomenis is failo 5 - baigti darba: ";
 
-        int stCon = TypeInt(menu, 5);
+        int stCon = CheckInt(menu, 5);
         vector<Stud> students;
 
         while (stCon != 5)
@@ -39,7 +38,7 @@ int main()
                 }
             }
             
-            stCon = TypeInt(menu, 5);
+            stCon = CheckInt(menu, 5);
         }
 
         string sortType;

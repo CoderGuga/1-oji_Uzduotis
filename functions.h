@@ -24,11 +24,12 @@ int RandInt(int min, int max)
     return distribution(generator);
 }
 
-int CheckInt(int max = 0)
+int CheckInt(const string& text, int max = 0)
 {
+    cout << text;
     while (true)
     {
-        cout << "Iveskite sveikaji skaiciu: ";
+        //cout << "Iveskite sveikaji skaiciu: ";
         string input;
         cin >> input;
         try {
@@ -245,14 +246,14 @@ Stud CreateStudent(int stCon)
     Stud student;
     student.vardas = (stCon == 3) ? GenName() : TypeString("Studento vardas: ");
     student.pavarde = (stCon == 3) ? GenSurname() : TypeString("Studento pavarde: ");
-    student.egz = (stCon == 1) ? TypeInt("Egzamino pazymys: ", 10) : RandInt(1, 10);
+    student.egz = (stCon == 1) ? CheckInt("Egzamino pazymys: ", 10) : RandInt(1, 10);
     cout << "egzaminas: " << student.egz << endl;
     string con = TypeString("Prideti namu darbp pazymi? y/n  ");
     student.ndVector.clear();
     while (con == "y")
     {
         int nd = RandInt(1, 10);
-        nd = (stCon == 1) ? TypeInt("Namu darbu pazymys: ", 10) : RandInt(1, 10);
+        nd = (stCon == 1) ? CheckInt("Namu darbu pazymys: ", 10) : RandInt(1, 10);
         if (stCon != 1) cout<<"Pazymis: "<< nd<<endl;
         student.ndVector.push_back(nd);
         con = TypeString("Prideti namu darbp pazymi? y/n  ");
