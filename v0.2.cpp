@@ -1,4 +1,4 @@
-#include "helper.h"
+#include "functions.h"
 
 int main()
 {
@@ -24,19 +24,8 @@ int main()
         
         if (stCon == 1 || stCon == 2 || stCon == 3)
         {
-            Stud student;
-            student.vardas = (stCon == 3) ? GenName() : TypeString("Studento vardas: ");
-            student.pavarde = (stCon == 3) ? GenSurname() : TypeString("Studento pavarde: ");
-            student.egz = (stCon == 1) ? TypeInt("Egzamino pazymys: ", 10) : RandInt(1, 10);
-            cout << "egzaminas: " << student.egz << endl;
-            int nd_count = TypeInt("Kiek namu darbu pazymiu norite ivesti? ");
-            student.ndVector.clear();
-            student.ndVector.resize(nd_count);
-            for (int i = 0; i < nd_count; ++i) {
-                int nd = (stCon == 1) ? TypeInt("Namu darbo pazymys: ", 10) : RandInt(1, 10);
-                student.ndVector[i] = nd;
-                cout << "namu darbo: " << nd << endl;
-            }
+            Stud student = CreateStudent(stCon);
+            
             students.push_back(student);  
         }
         
@@ -58,20 +47,10 @@ int main()
         double median = 0;
         if (!student.ndVector.empty()) {
             // Calculate average
-            double sum = 0;
-            for (int grade : student.ndVector) {
-                sum += grade; 
-            }
-            average = sum / student.ndVector.size();
+            average = Average(student.ndVector);
 
             // Calculate median
-            std::vector<int> sorted_nd = student.ndVector;
-            std::sort(sorted_nd.begin(), sorted_nd.end());
-            if (sorted_nd.size() % 2 == 0) {
-                median = (sorted_nd[sorted_nd.size() / 2 - 1] + sorted_nd[sorted_nd.size() / 2]) / 2.0;
-            } else {
-                median = sorted_nd[sorted_nd.size() / 2];
-            }
+            median = Median(student.ndVector);
         }
 
         student.galutinisVid = student.egz * 0.6 + average * 0.4;
@@ -79,23 +58,7 @@ int main()
     }
 
     // Sort students based on the user's choice
-    if (sortType == "vardas") {
-        std::sort(students.begin(), students.end(), [](const Stud& a, const Stud& b) {
-            return a.vardas < b.vardas;
-        });
-    } else if (sortType == "pavarde") {
-        std::sort(students.begin(), students.end(), [](const Stud& a, const Stud& b) {
-            return a.pavarde < b.pavarde;
-        });
-    } else if (sortType == "vidurkis") {
-        std::sort(students.begin(), students.end(), [](const Stud& a, const Stud& b) {
-            return a.galutinisVid < b.galutinisVid;
-        });
-    } else if (sortType == "mediana") {
-        std::sort(students.begin(), students.end(), [](const Stud& a, const Stud& b) {
-            return a.galutinisMed < b.galutinisMed;
-        });
-    }
+    SortOutput(sortType, students);
 
     string outputType;
     cout << "Isvesti i terminala 't', ar faila 'f': ";
@@ -108,22 +71,7 @@ int main()
     auto start = high_resolution_clock::now();
     if (outputType == "t")
     {
-        string galutinisTipasVid = "Galutinis (Vid.)";
-        string galutinisTipasMed = "Galutinis (Med.)";
-            
-        cout << std::left << std::setw(15) << "Vardas" 
-            << std::setw(15) << "Pavarde" 
-            << std::setw(15) << galutinisTipasVid 
-            << std::setw(15) << galutinisTipasMed << endl;
-        cout << "-------------------------------------------------------------" << endl;
-
-        // Print the student data
-        for (const auto& student : students) {
-            cout << std::left << std::setw(15) << student.vardas 
-                << std::setw(15) << student.pavarde 
-                << std::setw(15) << std::fixed << std::setprecision(2) << student.galutinisVid 
-                << std::setw(15) << std::fixed << std::setprecision(2) << student.galutinisMed << endl;
-        }
+        PrintToTerminal(students);
     }
     else
         WriteToFile(students, "output.txt");
