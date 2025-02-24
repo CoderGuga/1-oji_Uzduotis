@@ -1,0 +1,10 @@
+Vardas                   Pavarde                    ND1       ND2       ND3       ND4       ND5       Egz.
+Vardas1                 Pavarde1                      8         5         8         3         3         6
+Vardas2                 Pavarde2                     10        10         7         6        10        10
+Vardas3                 Pavarde3                      9         8         2        10         7         5
+Vardas4                 Pavarde4                      4         4         6         6         8         8
+Vardas5                 Pavarde5                      9         9         7        10         4         4
+Vardas6                 Pavarde6                      5         3         6         7         2         7
+Jonas                   Jonaitis                      1         9         3         5         4         2
+Kasparas                Bonaitis                     10         9         6         7         8         7
+
