@@ -261,8 +261,48 @@ Stud CreateStudent(int stCon)
     return student;
 }
 
+void GenFile(string filename, int amount)
+{
+    int ndCount = 15;
+    std::ostringstream output;
 
+    auto start = high_resolution_clock::now();
 
+    output << std::left << std::setw(15) << "Vardas"
+           << std::setw(15) << "Pavarde";
+    for (int i = 1; i <= ndCount; i++)
+    {
+        output << std::setw(10) << ("ND" + std::to_string(i));
+    }
+    output << std::setw(10) << "Egz." << endl;
+    output << "-------------------------------------------------------------" << endl;
+    for (int i = 1; i <= amount; i++)
+    {
+        output << std::left << std::setw(15) << ("Vardas" + std::to_string(i))
+               << std::setw(15) << ("Pavarde" + std::to_string(i));
+        for (int j = 1; j <= ndCount; j++)
+        {
+            output << std::setw(10) << RandInt(1, 10);
+        }
+        output << std::setw(10) << RandInt(1, 10) << endl;
+    }
 
+    std::chrono::duration<double> duration = high_resolution_clock::now() - start;
+    cout << "Failo generavimas uztruko " << duration.count() << " sekundes." << endl;
+
+    ofstream file(filename);
+    if (!file.is_open()) {
+        cerr << "Nepavyko atidaryti failo (ar teisingai ivedete pavadinima?): " << filename << endl;
+        return;
+    }
+
+    start = high_resolution_clock::now();
+
+    file << output.str();
+    file.close();
+
+    duration = high_resolution_clock::now() - start;
+    cout << "Irasymas i faila uztruko " << duration.count() << " sekundes." << endl;
+}
 
 #endif
