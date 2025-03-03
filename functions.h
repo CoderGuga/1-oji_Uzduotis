@@ -1,86 +1,7 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-#include "helper.h"
-
-template <typename T>
-std::optional<T> string_to(const std::string & s)
-{
-    T value;
-    std::istringstream ss(s);
-    if ((ss >> value) && (ss >> std::ws).eof()) { // attempt the conversion
-        return value; // success
-    } else {
-        return std::nullopt; // failure
-    }
-}
-
-int RandInt(int min, int max)
-{
-    // Use the current time as a seed for the random number generator
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::mt19937 generator(seed); // Mersenne Twister engine
-    std::uniform_int_distribution<int> distribution(min, max);
-    return distribution(generator);
-}
-
-int CheckInt(const string& text, int max = 0)
-{
-    cout << text;
-    while (true)
-    {
-        //cout << "Iveskite sveikaji skaiciu: ";
-        string input;
-        cin >> input;
-        try {
-            auto result = string_to<int>(input);
-            if (result) {
-                if (max == 0 || result <= max)
-                    return *result;
-                else
-                    cout<< "Per didelis skaicius"<<endl;
-            } else {
-                throw std::invalid_argument("Neteisinga ivestis");
-            }
-        } catch (const std::invalid_argument&) {
-            cout << "Ivestas ne sveikas skaicius. Bandykite dar karta." << endl;
-        } catch (const std::exception& e) {
-            cerr << "Klaida: " << e.what() << endl;
-        }
-    }
-}
-
-
-int TypeInt(const string& text, int max = 0)
-{
-    cout << text;
-    string input;
-    while (true)
-    {
-        cin >> input;
-        auto result = string_to<int>(input);
-        if (result) {
-            if (max == 0 || result <= max)
-                return *result;
-            else
-                cout<< "Per didelis skaicius"<<endl;
-        } else {
-            cout << "Irasykite sveika skaiciu" << endl;
-        }
-    }
-}
-
-std::string TypeString(const string& prompt)
-{
-    string output;
-    cout << prompt;
-    while (!(cin >> output)) {
-        cin.clear(); // clear the error flag
-        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // discard invalid input
-        cout << "Invalid input. Please enter a valid string: ";
-    }
-    return output;
-}
+#include "helpFunctions.h"
 
 string GenName()
 {
@@ -109,6 +30,7 @@ int CountWordsInLine(const std::string& line)
 
 void ReadFromFile(vector<Stud>& students, const string& filename)
 {
+    auto start = high_resolution_clock::now();
     ifstream file(filename);
     if (!file.is_open()) {
         cerr << "Nepavyko atidaryti failo (ar teisingai ivedete pavadinima?): " << filename << endl;
@@ -121,7 +43,15 @@ void ReadFromFile(vector<Stud>& students, const string& filename)
         // First line is skipped
     }
 
-    while (std::getline(file, line)) {
+    const size_t bufferSize = 8192; // 8 KB buffer size
+    vector<char> buffer(bufferSize);
+    stringstream ss;
+
+    while (file.read(buffer.data(), bufferSize) || file.gcount() > 0) {
+        ss.write(buffer.data(), file.gcount());
+    }
+
+    while (std::getline(ss, line)) {
         std::istringstream stream(line);
         Stud student;
         stream >> student.vardas >> student.pavarde;
@@ -136,66 +66,51 @@ void ReadFromFile(vector<Stud>& students, const string& filename)
         if (!student.ndVector.empty()) {
             student.egz = student.ndVector.back();
             student.ndVector.pop_back();
+            student.galutinisVid = student.egz * 0.6 + Average(student.ndVector) * 0.4;
+            student.galutinisMed = student.egz * 0.6 + Median(student.ndVector) * 0.4;
             students.push_back(student);
         }
-
         
     }
 
     file.close();
 
+    std::chrono::duration<double> duration = high_resolution_clock::now() - start;
+    cout << "Failo nuskaitymas uztruko " << duration.count() << " sekundes." << endl;
 }
 
 void WriteToFile(const vector<Stud>& students, const string& filename)
 {
     ofstream file(filename);
-    if (!file.is_open()) {
-        cerr << "Nepavyko atidaryti failo (ar teisingai ivedete pavadinima?): " << filename << endl;
-        return;
-    }
+    std::ostringstream output;
+
+    auto start = high_resolution_clock::now();
 
     // Write the header line
-    file << std::left << std::setw(15) << "Vardas"
+    output << std::left << std::setw(15) << "Vardas"
          << std::setw(15) << "Pavarde"
          << std::setw(15) << "Galutinis (Vid.)"
          << std::setw(15) << "Galutinis (Med.)"
          << endl;
-    file << "-------------------------------------------------------------" << endl;
+    output << "-------------------------------------------------------------" << endl;
 
     // Write each student's data
     for (const auto& student : students) {
-        file << std::left << std::setw(15) << student.vardas
+        output << std::left << std::setw(15) << student.vardas
              << std::setw(15) << student.pavarde;
 
-        file << std::setw(15) << std::fixed << std::setprecision(2) << student.galutinisVid
+        output << std::setw(15) << std::fixed << std::setprecision(2) << student.galutinisVid
              << std::setw(15) << std::fixed << std::setprecision(2) << student.galutinisMed
              << endl;
     }
 
+    
+
+    file << output.str();
     file.close();
-}
 
-double Median(vector<int> numbers)
-{
-    vector<int> sorted = numbers;
-    sort(sorted.begin(), sorted.end());
-    double median;
-    if (sorted.size() % 2 == 0)
-        median = (sorted[sorted.size() / 2 - 1] + sorted[sorted.size() / 2]) / 2.0;
-    else
-        median = sorted[sorted.size() / 2];
-
-    return median;
-}
-
-double Average(vector<int> numbers)
-{
-    double sum = 0;
-    for (int grade : numbers) {
-        sum += grade;}
-    double average = sum / numbers.size();
-
-    return average;
+    std::chrono::duration<double> duration = high_resolution_clock::now() - start;
+    cout << "Irasymas i faila uztruko " << duration.count() << " sekundes." << endl;
 }
 
 vector<Stud> SortOutput(string sortType, vector<Stud> students)
@@ -303,6 +218,93 @@ void GenFile(string filename, int amount)
 
     duration = high_resolution_clock::now() - start;
     cout << "Irasymas i faila uztruko " << duration.count() << " sekundes." << endl;
+}
+
+void SortStudent(vector<Stud>& students, vector<Stud>& islaike, vector<Stud>& neislaike)
+{
+    auto start = high_resolution_clock::now();
+    for (const auto& student : students)
+    {
+        float galutinis = student.egz * 0.6 + Average(student.ndVector) * 0.4;
+        if (galutinis < 5.0)
+            neislaike.push_back(student);
+        else
+            islaike.push_back(student);
+    }
+    std::chrono::duration<double> duration = high_resolution_clock::now() - start;
+    cout << "Rusiavimas uztruko " << duration.count() << " sekundes." << endl;
+}
+
+void GenFiles()
+{
+    cout<<"1 000 studentu"<<endl;
+    auto start = high_resolution_clock::now();
+    GenFile("1 000 studentu.txt",1000);
+    auto end = high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+    cout << "viskas bendrai uztruko " << duration.count() << " sekundes." << endl;
+
+    cout<<"10 000 studentu"<<endl;
+    start = high_resolution_clock::now();
+    GenFile("10 000 studentu.txt",10000);
+    end = high_resolution_clock::now();
+    duration = end - start;
+    cout << "viskas bendrai uztruko " << duration.count() << " sekundes." << endl;
+
+    cout<<"100 000 studentu"<<endl;
+    start = high_resolution_clock::now();
+    GenFile("100 000 studentu.txt",100000);
+    end = high_resolution_clock::now();
+    duration = end - start;
+    cout << "viskas bendrai uztruko " << duration.count() << " sekundes." << endl;
+
+    cout<<"1 000 000 studentu"<<endl;
+    start = high_resolution_clock::now();
+    GenFile("1 000 000 studentu.txt",1000000);
+    end = high_resolution_clock::now();
+    duration = end - start;
+    cout << "viskas bendrai uztruko " << duration.count() << " sekundes." << endl;
+
+    cout<<"10 000 000 studentu"<<endl;
+    start = high_resolution_clock::now();
+    GenFile("10 000 000 studentu.txt",10000000);
+    end = high_resolution_clock::now();
+    duration = end - start;
+    cout << "viskas bendrai uztruko " << duration.count() << " sekundes." << endl;
+}
+
+void DataProccess(string filename)
+{
+    vector<Stud> students;
+    vector<Stud> islaike;
+    vector<Stud> neislaike;
+
+    cout<<filename<<endl;
+
+    auto start = high_resolution_clock::now();
+
+    ReadFromFile(students, filename);
+    SortStudent(students, islaike, neislaike);
+    string islaikeFile = "Islaike" + std::to_string(students.size()) + ".txt";
+    string neislaikeFile = "Neislaike" + std::to_string(students.size()) + ".txt";
+    WriteToFile(islaike, islaikeFile);
+    WriteToFile(neislaike, neislaikeFile);
+
+    students.clear();
+    islaike.clear();
+    neislaike.clear();
+
+    std::chrono::duration<double> duration = high_resolution_clock::now() - start;
+    cout << "Bendrai uztruko " << duration.count() << " sekundes." << endl;
+}
+
+void FullDataProccess(string filename1, string filename2, string filename3, string filename4, string filename5)
+{
+    DataProccess(filename1);
+    DataProccess(filename2);
+    DataProccess(filename3);
+    //DataProccess(filename4);
+    //DataProccess(filename5);
 }
 
 #endif
