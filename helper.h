@@ -13,6 +13,7 @@
 #include <chrono>
 #include <exception>
 #include <random>
+#include <sstream>
 
 using std::cout;
 using std::cin;
@@ -26,6 +27,7 @@ using std::getline;
 using namespace std::chrono;
 using std::sort;
 using std::optional;
+using std::stringstream;
 
 int MAX_GRADES = 10;
 
