@@ -3,17 +3,18 @@
 int main()
 {
     try {
-        string menu = "1 - ranka irasyti viska, 2 - generuoti pazymius, 3 - generuoti ir pazymius ir studentu vardus, pavardes, 4 - irasyti duomenis is failo 5 - baigti darba: ";
+        string menu = "1 - ranka irasyti viska, 2 - generuoti pazymius, 3 - generuoti ir pazymius ir studentu vardus, pavardes, 4 - irasyti duomenis is failo, 5 - generuoti studentu failus, 6 - ruosiuoti sugeneruotus studentu failus, 7 - baigti darba: ";
 
-        int stCon = CheckInt(menu, 5);
+        int stCon = CheckInt(menu, 7);
         vector<Stud> students;
 
-        while (stCon != 5)
+        while (stCon < 6)
         {
             if (stCon == 4) {
                 string filename;
                 cout << "Iveskite failo pavadinima: ";
-                cin >> filename;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::getline(cin, filename);
 
                 auto start = high_resolution_clock::now();
                 try {
@@ -38,58 +39,68 @@ int main()
                 }
             }
             
-            stCon = CheckInt(menu, 5);
-        }
+            stCon = CheckInt(menu, 7);
 
-        string sortType;
-        cout << "Rikiavimo tipas? (Vardas - vardas / Pavarde - pavarde / Galutinis pagal vidurki - vidurkis / Galutinis pagal mediana - mediana): ";
-        cin >> sortType;
-        while (sortType != "vardas" && sortType != "pavarde" && sortType != "vidurkis" && sortType != "mediana")
+            if(stCon == 5)
+                GenFiles();
+        }
+        if (stCon == 7)
         {
-            cout << "Iveskite 'vardas', 'pavarde', 'vidurkis' arba 'mediana': ";
+            string sortType;
+            cout << "Rikiavimo tipas? (Vardas - vardas / Pavarde - pavarde / Galutinis pagal vidurki - vidurkis / Galutinis pagal mediana - mediana): ";
             cin >> sortType;
-        }
-
-        // Calculate final grades
-        for (auto& student : students) {
-            double average = 0;
-            double median = 0;
-            if (!student.ndVector.empty()) {
-                average = Average(student.ndVector);
-                median = Median(student.ndVector);
+            while (sortType != "vardas" && sortType != "pavarde" && sortType != "vidurkis" && sortType != "mediana")
+            {
+                cout << "Iveskite 'vardas', 'pavarde', 'vidurkis' arba 'mediana': ";
+                cin >> sortType;
             }
 
-            student.galutinisVid = student.egz * 0.6 + average * 0.4;
-            student.galutinisMed = student.egz * 0.6 + median * 0.4;
-        }
+            // Calculate final grades
+            for (auto& student : students) {
+                double average = 0;
+                double median = 0;
+                if (!student.ndVector.empty()) {
+                    average = Average(student.ndVector);
+                    median = Median(student.ndVector);
+                }
 
-        // Sort students based on the user's choice
-        students = SortOutput(sortType, students);
+                student.galutinisVid = student.egz * 0.6 + average * 0.4;
+                student.galutinisMed = student.egz * 0.6 + median * 0.4;
+            }
 
-        string outputType;
-        cout << "Isvesti i terminala 't', ar faila 'f': ";
-        cin >> outputType;
-        while (outputType != "t" && outputType != "f")
-        {
-            cout << "Iveskite 't' arba 'f': ";
+            // Sort students based on the user's choice
+            students = SortOutput(sortType, students);
+
+            string outputType;
+            cout << "Isvesti i terminala 't', ar faila 'f': ";
             cin >> outputType;
-        }
-        auto start = high_resolution_clock::now();
-        if (outputType == "t")
-        {
-            PrintToTerminal(students);
-        }
-        else {
-            try {
-                WriteToFile(students, "output.txt");
-            } catch (const std::exception& e) {
-                cerr << "Nepavyko irasyti i faila: " << e.what() << endl;
+            while (outputType != "t" && outputType != "f")
+            {
+                cout << "Iveskite 't' arba 'f': ";
+                cin >> outputType;
             }
+            auto start = high_resolution_clock::now();
+            if (outputType == "t")
+            {
+                PrintToTerminal(students);
+            }
+            else {
+                try {
+                    WriteToFile(students, "output.txt");
+                } catch (const std::exception& e) {
+                    cerr << "Nepavyko irasyti i faila: " << e.what() << endl;
+                }
+            }
+
+            students.clear();
+
+            auto end = high_resolution_clock::now();
+            auto duration = duration_cast<milliseconds>(end - start);
+            cout << "Israsymas truko " << duration.count() << " milisekundes." << endl;
         }
 
-        auto end = high_resolution_clock::now();
-        auto duration = duration_cast<milliseconds>(end - start);
-        cout << "Israsymas truko " << duration.count() << " milisekundes." << endl;
+    if (stCon == 6)
+        FullDataProccess("1 000 studentu.txt", "10 000 studentu.txt", "100 000 studentu.txt", "1 000 000 studentu.txt", "10 000 000 studentu.txt");
 
     } catch (const std::exception& e) {
         cerr << "Ivyko klaida: " << e.what() << endl;

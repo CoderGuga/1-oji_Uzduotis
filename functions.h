@@ -110,11 +110,12 @@ void WriteToFile(const vector<Stud>& students, const string& filename)
     file.close();
 
     std::chrono::duration<double> duration = high_resolution_clock::now() - start;
-    cout << "Irasymas i faila uztruko " << duration.count() << " sekundes." << endl;
+    cout << "Irasymas i faila "<<filename<<" uztruko " << duration.count() << " sekundes." << endl;
 }
 
 vector<Stud> SortOutput(string sortType, vector<Stud> students)
 {
+
     if (sortType == "vardas") {
         std::sort(students.begin(), students.end(), [](const Stud& a, const Stud& b) {
             return a.vardas < b.vardas;
@@ -225,8 +226,7 @@ void SortStudent(vector<Stud>& students, vector<Stud>& islaike, vector<Stud>& ne
     auto start = high_resolution_clock::now();
     for (const auto& student : students)
     {
-        float galutinis = student.egz * 0.6 + Average(student.ndVector) * 0.4;
-        if (galutinis < 5.0)
+        if (student.galutinisVid < 5.0)
             neislaike.push_back(student);
         else
             islaike.push_back(student);
@@ -273,7 +273,7 @@ void GenFiles()
     cout << "viskas bendrai uztruko " << duration.count() << " sekundes." << endl;
 }
 
-void DataProccess(string filename)
+void DataProccess(string filename, string sortType)
 {
     vector<Stud> students;
     vector<Stud> islaike;
@@ -285,8 +285,16 @@ void DataProccess(string filename)
 
     ReadFromFile(students, filename);
     SortStudent(students, islaike, neislaike);
+
     string islaikeFile = "Islaike" + std::to_string(students.size()) + ".txt";
     string neislaikeFile = "Neislaike" + std::to_string(students.size()) + ".txt";
+
+    auto start2 = high_resolution_clock::now();
+    islaike = SortOutput(sortType, islaike);
+    neislaike = SortOutput(sortType, neislaike);
+    std::chrono::duration<double> duration2 = high_resolution_clock::now() - start2;
+    cout << "Rikiavimas uztruko " << duration2.count() << " sekundes." << endl;
+
     WriteToFile(islaike, islaikeFile);
     WriteToFile(neislaike, neislaikeFile);
 
@@ -300,11 +308,19 @@ void DataProccess(string filename)
 
 void FullDataProccess(string filename1, string filename2, string filename3, string filename4, string filename5)
 {
-    DataProccess(filename1);
-    DataProccess(filename2);
-    DataProccess(filename3);
-    //DataProccess(filename4);
-    //DataProccess(filename5);
+    string sortType;
+    cout << "Rikiavimo tipas? (Vardas - vardas / Pavarde - pavarde / Galutinis pagal vidurki - vidurkis / Galutinis pagal mediana - mediana): ";
+    cin >> sortType;
+    while (sortType != "vardas" && sortType != "pavarde" && sortType != "vidurkis" && sortType != "mediana")
+    {
+        cout << "Iveskite 'vardas', 'pavarde', 'vidurkis' arba 'mediana': ";
+        cin >> sortType;
+    }
+    DataProccess(filename1, sortType);
+    DataProccess(filename2, sortType);
+    DataProccess(filename3, sortType);
+    DataProccess(filename4, sortType);
+    DataProccess(filename5, sortType);
 }
 
 #endif
