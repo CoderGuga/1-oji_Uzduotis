@@ -2,7 +2,9 @@
 
 v1.0
 Pirmoji strategija
-![image](https://github.com/user-attachments/assets/c3a66639-6054-400c-8624-161d67f727d8)
+
+![image](https://github.com/user-attachments/assets/9db9261d-3065-4918-8519-ee8cd3256a4a)
+
 
 Pirmojo release rezultatai, naudojant skirtingo tipo konteinerius.
 
@@ -12,5 +14,6 @@ Memory:   Speed: 2667 MHz, Size: 32 GB
 Storage: HDD
 
 Antroji strategija
+
 ![image](https://github.com/user-attachments/assets/bd492c4d-6f21-4dc3-b9ab-79384170b1a3)
 
