@@ -202,3 +202,10 @@ int CountWordsInLine(const std::string& line)
     }
     return count;
 }
+
+void Pause()
+{
+    std::cout << "Press Enter to continue...";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.get();
+}

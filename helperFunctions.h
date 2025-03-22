@@ -18,5 +18,6 @@ string GenSurname();
 void GenFile(string filename, int amount);
 void GenFiles();
 int CountWordsInLine(const string& line);
+void Pause();
 
 #endif // HELPFUNCTIONS_H

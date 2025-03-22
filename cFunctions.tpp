@@ -190,7 +190,80 @@ void SortStudent(Container& students, Container& islaike, Container& neislaike)
 }
 
 template <typename Container>
-void DataProccess(string filename, string sortType, bool writeToFile = true)
+void SortStudentOneContainerList(Container& students, Container& neislaike)
+{
+    auto start = high_resolution_clock::now();
+    auto it = students.begin();
+    while (it != students.end()) {
+        if (it->galutinisVid < 5.0) {
+            neislaike.push_back(*it);
+            it = students.erase(it); // Erase returns the next iterator
+        } else {
+            ++it;
+        }
+    }
+    std::chrono::duration<double> duration = high_resolution_clock::now() - start;
+    cout << "Rusiavimas uztruko " << duration.count() << " sekundes." << endl;
+}
+
+template <typename Container>
+void SortStudentOneContainer(Container& students, Container& neislaike)
+{
+    auto start = std::chrono::high_resolution_clock::now();
+
+    // Use remove_if and erase for std::vector and std::deque
+    auto it = std::remove_if(students.begin(), students.end(), [&](const auto& student) {
+        if (student.galutinisVid < 5.0) {
+            neislaike.push_back(student);
+            return true; // Mark for removal
+        }
+        return false;
+    });
+    students.erase(it, students.end());
+
+    std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start;
+    std::cout << "Rusiavimas uztruko " << duration.count() << " sekundes." << std::endl;
+}
+
+template <typename Container>
+void SortStudentOneContainerListADV(Container& students, Container& neislaike)
+{
+    auto start = high_resolution_clock::now();
+    auto it = std::stable_partition(students.begin(), students.end(), [](const auto& student) {
+        return student.galutinisVid >= 5.0;
+    });
+
+    // Move the students who failed to the neislaike container
+    neislaike.insert(neislaike.end(), it, students.end());
+
+    // Erase the students who failed from the students container
+    students.erase(it, students.end());
+
+    std::chrono::duration<double> duration = high_resolution_clock::now() - start;
+    cout << "Rusiavimas uztruko " << duration.count() << " sekundes." << endl;
+}
+
+template <typename Container>
+void SortStudentOneContainerADV(Container& students, Container& neislaike)
+{
+    auto start = std::chrono::high_resolution_clock::now();
+
+    auto it = std::partition(students.begin(), students.end(), [](const auto& student) {
+        return student.galutinisVid >= 5.0;
+    });
+
+    // Move the students who failed to the neislaike container
+    neislaike.insert(neislaike.end(), it, students.end());
+
+    // Erase the students who failed from the students container
+    students.erase(it, students.end());
+
+    std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start;
+    std::cout << "Rusiavimas uztruko " << duration.count() << " sekundes." << std::endl;
+}
+
+template <typename Container>
+void DataProccess1(string filename, string sortType, bool writeToFile = true)
 {
     Container students;
     Container islaike;
@@ -224,9 +297,70 @@ void DataProccess(string filename, string sortType, bool writeToFile = true)
     cout << "Bendrai uztruko " << duration.count() << " sekundes." << endl;
 }
 
+template <typename Container>
+void DataProccess2(string filename, string sortType, int containerType)
+{
+    // 1 - vector, 2 - list, 3 - deque
+    Container students;
+    Container neislaike;
+
+    cout<<filename<<endl;
+
+    auto start = high_resolution_clock::now();
+
+    ReadFromFile(students, filename);
+    if (containerType == 2)
+        SortStudentOneContainerList(students, neislaike);
+    else
+        SortStudentOneContainer(students, neislaike);
+
+    auto start2 = high_resolution_clock::now();
+    students = SortOutput(sortType, students);
+    neislaike = SortOutput(sortType, neislaike);
+    std::chrono::duration<double> duration2 = high_resolution_clock::now() - start2;
+    cout << "Rikiavimas uztruko " << duration2.count() << " sekundes." << endl;
+
+    students.clear();
+    neislaike.clear();
+
+    std::chrono::duration<double> duration = high_resolution_clock::now() - start;
+    cout << "Bendrai uztruko " << duration.count() << " sekundes." << endl;
+}
+
+template <typename Container>
+void DataProccess3(string filename, string sortType, int containerType)
+{
+    // 1 - vector, 2 - list, 3 - deque
+    Container students;
+    Container neislaike;
+
+    cout<<filename<<endl;
+
+    auto start = high_resolution_clock::now();
+
+    ReadFromFile(students, filename);
+    if (containerType == 2)
+        SortStudentOneContainerListADV(students, neislaike);
+    else
+        SortStudentOneContainerADV(students, neislaike);
+
+    auto start2 = high_resolution_clock::now();
+    students = SortOutput(sortType, students);
+    neislaike = SortOutput(sortType, neislaike);
+    std::chrono::duration<double> duration2 = high_resolution_clock::now() - start2;
+    cout << "Rikiavimas uztruko " << duration2.count() << " sekundes." << endl;
+
+    students.clear();
+    neislaike.clear();
+
+    std::chrono::duration<double> duration = high_resolution_clock::now() - start;
+    cout << "Bendrai uztruko " << duration.count() << " sekundes." << endl;
+}
+
 void FullDataProccess(string filename1, string filename2, string filename3, string filename4, string filename5)
 {
     string sortType;
+    string filenames[5] = {filename1, filename2, filename3, filename4, filename5};
     cout << "Rikiavimo tipas? (Vardas - vardas / Pavarde - pavarde / Galutinis pagal vidurki - vidurkis / Galutinis pagal mediana - mediana): ";
     cin >> sortType;
     while (sortType != "vardas" && sortType != "pavarde" && sortType != "vidurkis" && sortType != "mediana")
@@ -234,28 +368,34 @@ void FullDataProccess(string filename1, string filename2, string filename3, stri
         cout << "Iveskite 'vardas', 'pavarde', 'vidurkis' arba 'mediana': ";
         cin >> sortType;
     }
-    DataProccess<vector<Stud>>(filename1, sortType);
-    DataProccess<vector<Stud>>(filename2, sortType);
-    DataProccess<vector<Stud>>(filename3, sortType);
-    DataProccess<vector<Stud>>(filename4, sortType);
-    DataProccess<vector<Stud>>(filename5, sortType);
+    for (int i = 0; i < 5; i++)
+    {
+        DataProccess1<vector<Stud>>(filenames[i], sortType);
+    }
 }
 
 void FullContainerTest(string filename1, string filename2, string filename3, string filename4, string filename5)
 {
     string sortType = "vidurkis";
     double vectorTime, listTime, dequeTime = 0;
+    string filenames[5] = {filename1, filename2, filename3, filename4, filename5};
     int times = 5;
 
-    for (int i = 0; i <= times; i++){
+    int stratNum = TypeInt("Pasirinkite strategija (1-3): ", 3);
+
+    for (int i = 0; i < times; i++){
     //vector test
     cout<<"Vector konteinerio testavimas\n ---------------------------------------------------------------------------\n";
     auto start = high_resolution_clock::now();
-    DataProccess<vector<Stud>>(filename1, sortType, false);
-    DataProccess<vector<Stud>>(filename2, sortType, false);
-    DataProccess<vector<Stud>>(filename3, sortType, false);
-    DataProccess<vector<Stud>>(filename4, sortType, false);
-    DataProccess<vector<Stud>>(filename5, sortType, false);
+    for (int i = 0; i < 5; i++)
+    {
+        if (stratNum == 1)
+            DataProccess1<vector<Stud>>(filenames[i], sortType, false);
+        else if (stratNum == 2)
+            DataProccess2<vector<Stud>>(filenames[i], sortType, 1);
+        else if (stratNum == 3)
+            DataProccess3<vector<Stud>>(filenames[i], sortType, 1);
+    }
     std::chrono::duration<double> duration = high_resolution_clock::now() - start;
     cout << "Bendrai vector uztruko " << duration.count() << " sekundes.\n" << endl;
     vectorTime+=duration.count();
@@ -263,11 +403,15 @@ void FullContainerTest(string filename1, string filename2, string filename3, str
     //list test
     cout<<"List konteinerio testavimas\n ---------------------------------------------------------------------------\n";
     start = high_resolution_clock::now();
-    DataProccess<list<Stud>>(filename1, sortType, false);
-    DataProccess<list<Stud>>(filename2, sortType, false);
-    DataProccess<list<Stud>>(filename3, sortType, false);
-    DataProccess<list<Stud>>(filename4, sortType, false);
-    DataProccess<list<Stud>>(filename5, sortType, false);
+    for (int i = 0; i < 5; i++)
+    {
+        if (stratNum == 1)
+            DataProccess1<list<Stud>>(filenames[i], sortType, false);
+        else if (stratNum == 2)
+            DataProccess2<list<Stud>>(filenames[i], sortType, 2);
+        else if (stratNum == 3)
+            DataProccess3<list<Stud>>(filenames[i], sortType, 2);
+    }
     duration = high_resolution_clock::now() - start;
     cout << "Bendrai list uztruko " << duration.count() << " sekundes.\n" << endl;
     listTime+=duration.count();
@@ -275,11 +419,15 @@ void FullContainerTest(string filename1, string filename2, string filename3, str
     //deque test
     cout<<"Deque konteinerio testavimas\n ---------------------------------------------------------------------------\n";
     start = high_resolution_clock::now();
-    DataProccess<deque<Stud>>(filename1, sortType, false);
-    DataProccess<deque<Stud>>(filename2, sortType, false);
-    DataProccess<deque<Stud>>(filename3, sortType, false);
-    DataProccess<deque<Stud>>(filename4, sortType, false);
-    DataProccess<deque<Stud>>(filename5, sortType, false);
+    for (int i = 0; i < 5; i++)
+    {
+        if (stratNum == 1)
+            DataProccess1<deque<Stud>>(filenames[i], sortType, false);
+        else if (stratNum == 2)
+            DataProccess2<deque<Stud>>(filenames[i], sortType, 3);
+        else if (stratNum == 3)
+            DataProccess3<deque<Stud>>(filenames[i], sortType, 3);
+    }
     duration = high_resolution_clock::now() - start;
     cout << "Bendrai deque uztruko " << duration.count() << " sekundes." << endl;
     dequeTime+=duration.count();

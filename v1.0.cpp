@@ -111,7 +111,7 @@ int main()
         cerr << "Ivyko klaida: " << e.what() << endl;
     }
 
-    system("pause");
+    Pause();
 
     return 0;
 }
