@@ -1,6 +1,6 @@
 # 1-oji_Uzduotis
 
-v1.0
+v1.0 
 
 Pirmojo release rezultatai, naudojant skirtingo tipo konteinerius.
 
