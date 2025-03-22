@@ -31,21 +31,21 @@ Trečioji strategija - ta pati, kaip antroji, tačiau studentai skirstomi naudoj
 
 1. Sistemos Reikalavimai
 
-Įsitikinkite, kad turite šias priemones:
+      Įsitikinkite, kad turite šias priemones:
 
-Operacinė sistema: Windows, Linux arba macOS
+      Operacinė sistema: Windows, Linux arba macOS
 
-C++ kompiliatorius: GCC (MinGW Windows sistemai), Clang arba MSVC
+      C++ kompiliatorius: GCC (MinGW Windows sistemai), Clang arba MSVC
 
-CMake: 3.10 ar naujesnė versija
+      CMake: 3.10 ar naujesnė versija
 
-Git: 2.0 ar naujesnė versija
+      Git: 2.0 ar naujesnė versija
 
-Patikrinkite, ar įrankiai įdiegti:
+      Patikrinkite, ar įrankiai įdiegti:
 
-    cmake --version
-    gcc --version
-    git --version
+          cmake --version
+          gcc --version
+          git --version
 
 
 2. Projekto Atsisiuntimas
