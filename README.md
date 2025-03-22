@@ -17,3 +17,8 @@ Antroji strategija
 
 ![image](https://github.com/user-attachments/assets/bd492c4d-6f21-4dc3-b9ab-79384170b1a3)
 
+Trečioji strategija:
+
+![image](https://github.com/user-attachments/assets/be7e285a-67b7-4e6d-85be-893f421626ce)
+
+
