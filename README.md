@@ -10,8 +10,11 @@ Pirmoji strategija - studentai iš pagrindinio konteinerio išskirstomi į du sk
 
 
 Rezultatai gauti naudojant kompiuterį su šiais komponentais:
+
 Processor:	Intel(R) Core(TM) i5-9300H CPU @ 2.40GHz
+
 Memory:   Speed: 2667 MHz, Size: 32 GB
+
 Storage: HDD
 
 
