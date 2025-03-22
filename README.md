@@ -1,7 +1,7 @@
 # 1-oji_Uzduotis
 
 v1.0  
-  
+   
 Pirmojo release rezultatai, naudojant skirtingo tipo konteinerius.
 
 Pirmoji strategija - studentai iš pagrindinio konteinerio išskirstomi į du skirtingus - vieną išlaikiusiems, kitą neišlaikiusiems, tada jie surikiuojami.
