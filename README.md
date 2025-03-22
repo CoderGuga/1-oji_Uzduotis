@@ -31,17 +31,17 @@ Trečioji strategija - ta pati, kaip antroji, tačiau studentai skirstomi naudoj
 
 1. Sistemos Reikalavimai
 
-      Įsitikinkite, kad turite šias priemones:
+Įsitikinkite, kad turite šias priemones:
 
-      Operacinė sistema: Windows, Linux arba macOS
+Operacinė sistema: Windows, Linux arba macOS
 
-      C++ kompiliatorius: GCC (MinGW Windows sistemai), Clang arba MSVC
+C++ kompiliatorius: GCC (MinGW Windows sistemai), Clang arba MSVC
 
-      CMake: 3.10 ar naujesnė versija
+CMake: 3.10 ar naujesnė versija
 
-      Git: 2.0 ar naujesnė versija
+Git: 2.0 ar naujesnė versija
 
-      Patikrinkite, ar įrankiai įdiegti:
+Patikrinkite, ar įrankiai įdiegti:
 
           cmake --version
           gcc --version
@@ -50,32 +50,34 @@ Trečioji strategija - ta pati, kaip antroji, tačiau studentai skirstomi naudoj
 
 2. Projekto Atsisiuntimas
 
-  1. Atidarykite terminalą (arba "Command Prompt" Windows sistemoje).
 
-  2. Nukeliaukite į katalogą, kuriame norite atsisiųsti projektą.
+     Atidarykite terminalą (arba "Command Prompt" Windows sistemoje).
 
-    cd /kelias/iki/katalogo
+     Nukeliaukite į katalogą, kuriame norite atsisiųsti projektą.
 
-  3. Nukopijuokite projektą iš GitHub naudodami komandą:
+          cd /kelias/iki/katalogo
 
-    git clone https://github.com/vartotojas/projektas.git
+     Nukopijuokite projektą iš GitHub naudodami komandą:
 
-  4. Pereikite į projekto katalogą:
+          git clone https://github.com/vartotojas/projektas.git
+
+   Pereikite į projekto katalogą:
    
-    cd projektas
+          cd projektas
 
 
 3. Programos Kompiliavimas
 
-  1. Sukurkite "build" katalogą ir pereikite į jį:
 
-    mkdir build && cd build
+     Sukurkite "build" katalogą ir pereikite į jį:
 
-  2. Paleiskite "CMake" komandą:
+          mkdir build && cd build
 
-    cmake ..
+     Paleiskite "CMake" komandą:
 
-  3. Kompiliuokite programą:
+          cmake ..
+
+     Kompiliuokite programą:
 
   Windows (naudojant MinGW):
 
@@ -89,7 +91,7 @@ Trečioji strategija - ta pati, kaip antroji, tačiau studentai skirstomi naudoj
 
 4. Programos Paleidimas
 
-  1. Po sėkmingo kompiliavimo, galite paleisti programą:
+     Po sėkmingo kompiliavimo, galite paleisti programą:
 
   Windows:
 
